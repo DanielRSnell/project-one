@@ -1,15 +1,22 @@
-import React from "react";
-import styled from "styled-components";
-import { Ionicons } from "@expo/vector-icons";
-import { NotificationsIcon } from "./Icons";
+/** @format */
+
+import React from 'react';
+import { TouchableOpacity } from 'react-native';
+import styled from 'styled-components';
+import { Ionicons } from '@expo/vector-icons';
+import { NotificationsIcon } from './Icons';
 
 export const MainHeader = (props) => (
 	<Container>
 		<Titlebar>
-			<Avatar source={props.avatar} />
+			<TouchableOpacity
+				onPress={props.onOpen}
+				style={{ position: 'absolute', top: 0, left: 2 }}>
+				<Avatar source={props.avatar} />
+			</TouchableOpacity>
 			<Title>Welcome Back,</Title>
 			<Name>{props.name}</Name>
-			<NotificationsIcon style={{ position: "absolute", right: 20, top: 5 }} />
+			<NotificationsIcon style={{ position: 'absolute', right: 20, top: 5 }} />
 		</Titlebar>
 	</Container>
 );
@@ -37,9 +44,6 @@ const Avatar = styled.Image`
 	background: black;
 	border-radius: 22px;
 	margin-left: 20px;
-	position: absolute;
-	top: 0;
-	left: 0;
 `;
 
 const Container = styled.View`

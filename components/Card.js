@@ -1,29 +1,49 @@
-import { AppLoading } from "expo";
-import React from "react";
-import { ScrollView } from "react-native";
-import styled from "styled-components";
+/** @format */
 
-export const Card = (props) => (
-	<ScrollView horizontal={true} style={{ paddingBottom: 30 }} showsHorizontalScrollIndicator={false}>
-		{
-			props.data ? props.data.map((item, index) => (
-				<CardContainer key={index}>
-					<Cover>
-						<Image source={item.image} />
-						<Title>{item.title}</Title>
-					</Cover>
-					<Content>
-						<Logo source={item.logo} />
-						<Wrapper>
-							<Caption>{item.caption}</Caption>
-							<Subtitle>{item.subtitle}</Subtitle>
-						</Wrapper>
-					</Content>
-				</CardContainer>
-			)) :
-			<AppLoading />}
-	</ScrollView>
-);
+import { AppLoading } from 'expo';
+import React from 'react';
+import { ScrollView, TouchableOpacity } from 'react-native';
+import styled from 'styled-components';
+
+export const Card = (props) => {
+	console.log(props.data, 'CARD PROPS');
+	return (
+		<ScrollView
+			horizontal={true}
+			style={{ paddingBottom: 30, paddingLeft: 10 }}
+			showsHorizontalScrollIndicator={false}>
+			{props.data ? (
+				props.data.map((item, index) => (
+					<TouchableOpacity
+						key={index}
+						onPress={() =>
+							props.navigation.navigate('Section', { section: item })
+						}>
+						<CardContainer style={{ elevation: 8 }}>
+							<Cover>
+								<Image
+									source={
+										'https://images.ctfassets.net/9ylc32dn5hpw/1unQVGeAWyChxUJNqGLK4y/37e8ea57ed3089b3e79dff7cdc76cc6c/background1.jpg'
+									}
+								/>
+								<Title>{item.title}</Title>
+							</Cover>
+							<Content>
+								<Logo source={item.logo} />
+								<Wrapper>
+									<Caption>{item.caption}</Caption>
+									<Subtitle>{item.subtitle}</Subtitle>
+								</Wrapper>
+							</Content>
+						</CardContainer>
+					</TouchableOpacity>
+				))
+			) : (
+				<AppLoading />
+			)}
+		</ScrollView>
+	);
+};
 
 const Content = styled.View`
 	padding-left: 20px;
@@ -51,15 +71,16 @@ const Caption = styled.Text`
 	font-weight: 600;
 `;
 
-const Wrapper = styled.View`margin-left: 10px;`;
+const Wrapper = styled.View`
+	margin-left: 10px;
+`;
 
 const CardContainer = styled.View`
 	background: white;
 	width: 315px;
 	height: 280px;
 	border-radius: 14px;
-	margin-left: 20px;
-	margin-top: 20px;
+	margin: 20px 10px;
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 `;
 

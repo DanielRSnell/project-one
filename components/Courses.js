@@ -24,19 +24,19 @@ const Course = (props) => (
 					</Content>
 				</Container>
 			)) :
-			<AppLoading />}
+				<AppLoading />}
 	</ScrollView>
 );
 
 export default Course;
 
 const Container = styled.View`
-	width: 375px;
+	width: 344px;
 	height: 335px;
 	border-radius: 14px;
 	background: white;
 	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-	margin: 15px 10px;
+	margin: 15px 5px;
 `;
 
 const Cover = styled.View`
