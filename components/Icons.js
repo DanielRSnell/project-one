@@ -104,23 +104,16 @@ export function NightIcon (props){
 	);
 }
 
-export function PlayIcon (props){
-	return (
-		<Svg width={16} height={16} viewBox='0 0 16 16' fill='none' {...props}>
-			<G clipPath='url(#prefix__clip0)'>
-				<Path
-					d='M14 7.999a.999.999 0 00-.427-.819l-10-7A1 1 0 002 .999V15a.999.999 0 001.573.819l10-7A.995.995 0 0014 8.001v-.002c0 .001 0 .001 0 0z'
-					fill='#546BFB'
-				/>
-			</G>
-			<Defs>
-				<ClipPath id='prefix__clip0'>
-					<Path fill='#fff' d='M0 0h16v16H0z' />
-				</ClipPath>
-			</Defs>
-		</Svg>
-	);
-}
+export const PlayIcon = props => (
+  <Svg height={38.15} width={38.15} {...props}>
+    <Path
+      opacity={1}
+      d="M8.153 14.585c-1.73-1.703-.825-4.649 1.563-5.087l19.148-3.516c2.072-.38 3.88 1.436 3.49 3.506L28.8 28.364c-.444 2.36-3.343 3.267-5.053 1.582L8.153 14.586z"
+      fill="#33CEFF"
+      transform="rotate(45 19.075 19.075)"
+    />
+  </Svg>
+);
 
 export function RefreshIcon (props){
 	return (

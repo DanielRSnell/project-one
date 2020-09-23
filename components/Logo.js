@@ -15,7 +15,7 @@ export const Logo = (props) => (
 					<Text>{item.text}</Text>
 				</LogoContainer>
 			)) :
-			<AppLoading />}
+				<AppLoading />}
 	</ScrollView>
 );
 

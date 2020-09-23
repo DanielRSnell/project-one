@@ -7,12 +7,14 @@ import {
 	Animated,
 	Easing,
 	StatusBar,
+	Platform,
+	Dimensions,
 } from 'react-native';
 import { MainHeader } from '../components/Header';
 import styled from 'styled-components';
 import { Card } from '../components/Card';
 import { Logo } from '../components/Logo';
-import Course from '../components/Courses';
+import Courses from '../components/Courses';
 import Navigation from '../components/Menu';
 import { connect } from 'react-redux';
 import { GetUser } from '../utils/endpoints';
@@ -20,39 +22,22 @@ import { useNavigation } from '@react-navigation/native';
 import ApolloClient from 'apollo-boost';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import ModalLogin from '../components/ModalLogin';
+import Notifications from '../components/Notifications'
 
-const CardsQuery = gql`
-	{
-		cardsCollection {
-			items {
-				title
-				subtitle
-				longContent
-				image {
-					title
-					description
-					contentType
-					fileName
-					size
-					url
-					width
-					height
-				}
-				caption
-				logo {
-					title
-					description
-					contentType
-					fileName
-					size
-					url
-					width
-					height
-				}
-			}
-		}
+const screenWidth = Dimensions.get('window').width;
+
+var tablet = false;
+
+var mobile = false;
+
+function detectDevice(screenWidth) {
+	if (screenWidth >= 768) {
+		tablet = true;
+	} else if (screenWidth < 768) {
+		mobile = true;
 	}
-`;
+}
 
 // Component
 function HomeScreen(props) {
@@ -66,10 +51,12 @@ function HomeScreen(props) {
 			Animated.timing(scale, {
 				toValue: 0.9,
 				duration: 300,
+				useNativeDriver: false,
 				easing: Easing.in(),
 			}).start();
 			Animated.spring(opacity, {
 				toValue: 0.5,
+				useNativeDriver: false,
 			}).start();
 
 			StatusBar.setBarStyle('light-content', true);
@@ -79,71 +66,76 @@ function HomeScreen(props) {
 			Animated.timing(scale, {
 				toValue: 1,
 				duration: 300,
+				useNativeDriver: false,
 				easing: Easing.in(),
 			}).start();
 			Animated.spring(opacity, {
 				toValue: 1,
+				useNativeDriver: false,
 			}).start();
 			StatusBar.setBarStyle('dark-content', true);
 		}
-	}, [scale]);
 
-	useEffect(() => {
-		GetUser().then((res) => {
-			console.log(res, 'USER PROFILE');
-			props.updateUser(res);
-			console.log(props);
-		});
-	}, []);
+		if (Platform.OS == 'android' && tablet === true) {
+			StatusBar.setBarStyle('light-content', true);
+		}
+	}, [scale]);
 
 	return (
 		<RootView>
 			<Navigation
-				onClose={props.closeMenu.bind()}
+				onOpenLogin={props.openLogin.bind()}
+				onOpenMenu={props.openMenu.bind()}
+				onCloseMenu={props.closeMenu.bind()}
+				onUpdateUser={props.updateUser.bind()}
+				onClearUser={props.clearUser.bind()}
+				onOpenNotif={props.openNotif.bind()}
+				onCloseNotif={props.closeNotif.bind()}
 				menuStatus={props.menuStatus}
+				user={props.user.name}
 			/>
 			<AnimatedContainer
 				style={{ transform: [{ scale: scale }], opacity: opacity }}>
 				<SafeAreaView>
 					<ScrollView style={{ height: '100%' }}>
-						{props.user ? (
-							<MainHeader
-								onOpen={props.openMenu.bind()}
-								name={props.user.name}
-								avatar={'https://randomuser.me/api/portraits/men/91.jpg'}
-							/>
-						) : null}
+						<MainHeader
+							onOpenLogin={props.openLogin.bind()}
+							onOpenMenu={props.openMenu.bind()}
+							onClearUser={props.clearUser.bind()}
+				onOpenNotif={props.openNotif.bind()}
+				onCloseNotif={props.closeNotif.bind()}
+							name={props.user.name}
+							avatar={props.user.photo}
+						/>
+						<Notifications onOpenNotif={props.openNotif.bind()} onCloseNotif={props.closeNotif.bind()} notifStatus={props.notifStatus} />
 						<Logo dataSource={logos} />
 						<Subtitle>Continue Learning</Subtitle>
-						<Query query={CardsQuery}>
-							{({ loading, error, data }) => {
-								if (loading) {
-									return <Message>Loading..</Message>;
-								}
-								if (error) {
-									console.log(error);
-									return <Message>Error...</Message>;
-								}
-								console.log(data.cardsCollection);
-								return (
-									<Card
-										data={data.cardsCollection.items}
-										navigation={navigation}
-									/>
-								);
-							}}
-						</Query>
+
+						<Card data={data} navigation={navigation} />
+
 						<Subtitle>Popular Courses</Subtitle>
-						<Course courses={courses} />
+						<Courses courses={courses} />
 					</ScrollView>
 				</SafeAreaView>
 			</AnimatedContainer>
+			<ModalLogin
+				userData={props.user}
+				onUpdateUser={props.updateUser.bind()}
+				loginMenu={props.loginMenu}
+				openLogin={props.openLogin.bind()}
+				closeLogin={props.closeLogin.bind()}
+			/>
 		</RootView>
 	);
 }
 
 function mapStateToProps(state) {
-	return { menuStatus: state.menuStatus, user: state.user };
+	return {
+		menuStatus: state.menuStatus,
+		user: state.user,
+		loginMenu: state.loginMenu,
+		notifStatus: state.notifStatus
+	};
 }
 
 function mapDispatchToProps(dispatch) {
@@ -154,6 +146,17 @@ function mapDispatchToProps(dispatch) {
 				type: 'CLOSE_MENU',
 			}),
 		updateUser: (user) => dispatch({ type: 'UPDATE_USER', payload: user }),
+		openLogin: () => dispatch({ type: 'OPEN_LOGIN' }),
+		closeLogin: () => dispatch({ type: 'CLOSE_LOGIN' }),
+		clearUser: () => dispatch({ type: "CLEAR_USER", payload: { name: "Guest", photo: require('../assets/avatar-default.jpg') } }),
+		openNotif: () =>
+		dispatch({
+			type: "OPEN_NOTIF"
+		}),
+		closeNotif: () =>
+		dispatch({
+			type: "CLOSE_NOTIF"
+		})
 	};
 }
 

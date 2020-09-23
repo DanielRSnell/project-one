@@ -18,7 +18,7 @@ function getCourseWidth(screenWidth) {
 }
 
 
-class Courses extends React.Component {
+class CourseItem extends React.Component {
 
 	state = {
 		cardWidth: getCourseWidth(screenWidth)
@@ -62,7 +62,7 @@ class Courses extends React.Component {
 	}
 }
 
-export default Courses;
+export default CourseItem;
 
 const CoursesContainer = styled.View`
 	flex-direction: row;
@@ -75,7 +75,7 @@ const Container = styled.View`
 	border-radius: 14px;
 	background: white;
 	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-	margin: 15px 10px;
+	margin: 15px 0px;
 `;
 
 const Cover = styled.View`

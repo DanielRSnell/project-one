@@ -6,6 +6,8 @@ import { WebView, Linking } from 'react-native-webview';
 import styled from 'styled-components';
 import { Ionicons } from '@expo/vector-icons';
 import Markdown from 'react-native-showdown';
+import AutoHeightWebView from 'react-native-autoheight-webview'
+import { PlayIcon } from '../components/Icons'
 
 export default function SectionScreen(props) {
 	const { section } = props.route.params;
@@ -24,6 +26,18 @@ export default function SectionScreen(props) {
 				<StatusBar hidden />
 				<Cover>
 					<Image source={section.image} />
+					<PlayWrapper>
+					<TouchableOpacity
+						underlayColor="transparent"
+						onPress={() => {
+							props.navigation.navigate("Video");
+						}}
+					>
+						<PlayView>
+							<PlayIcon style={{ marginLeft: -10 }} />
+						</PlayView>
+					</TouchableOpacity>
+					</PlayWrapper>
 					<Wrapper>
 						<Logo source={section.logo} />
 						<Subtitle>{section.subtitle}</Subtitle>
@@ -46,25 +60,25 @@ export default function SectionScreen(props) {
 					</CloseView>
 				</TouchableOpacity>
 				<Content>
-					{/* <WebView
-					source={{ html: section.longContent + htmlStyles }}
-					scalesPageToFit={false}
-					scrollEnabled={false}
-					refs='webview'
-					onNavigationStateChange={(event) => {
-						console.log(event);
-						if (event.url !== 'about:blank') {
-							this.refs.webview.stopLoading();
-							Linking.openURL(event.url);
-						}
-					}}
-				/> */}
-					<Markdown
+					<AutoHeightWebView
+						source={{ html: mockContent + htmlStyles }}
+						scalesPageToFit={false}
+						scrollEnabled={false}
+						refs='webview'
+						onNavigationStateChange={(event) => {
+							console.log(event);
+							if (event.url !== 'about:blank') {
+								this.refs.webview.stopLoading();
+								Linking.openURL(event.url);
+							}
+						}}
+					/>
+					{/* <Markdown
 						body={section.longContent}
 						pureCSS={htmlStyles}
 						scalesPageToFit={false}
 						scrollEnabled={false}
-					/>
+					/> */}
 				</Content>
 			</Container>
 		</ScrollView>
@@ -75,8 +89,10 @@ const Container = styled.View`
 	flex: 1;
 `;
 
-const htmlStyles = `
+const mockContent = `<h2>Welcome to DesignCode.io</h2> <p>Welcome to your coding journey. This will be an experience to remember. We're going to merge together the knowledge of developer and designer in-order to create pixel perfect applications that drive more users.</p><p>Welcome to your coding journey. This will be an experience to remember. We're going to merge together the knowledge of developer and designer in-order to create pixel perfect applications that drive more users.</p><p>Welcome to your coding journey. This will be an experience to remember. We're going to merge together the knowledge of developer and designer in-order to create pixel perfect applications that drive more users.</p><p>Welcome to your coding journey. This will be an experience to remember. We're going to merge together the knowledge of developer and designer in-order to create pixel perfect applications that drive more users.</p><p>Welcome to your coding journey. This will be an experience to remember. We're going to merge together the knowledge of developer and designer in-order to create pixel perfect applications that drive more users.</p>`
 
+const htmlStyles = `
+<style>
 * {
 	font-family: -apple-system, Roboto;
 	margin: 0;
@@ -129,7 +145,7 @@ pre {
 code {
 	color: white;
 }
-
+</style>
 `;
 
 const Title = styled.Text`
@@ -193,9 +209,25 @@ const Logo = styled.Image`
 `;
 
 const Content = styled.View`
-	min-height: 1500px;
-	max-height: 2000px;
+	
 	background: white;
 	padding: 20px;
 	padding-bottom: 50px;
+`;
+
+const PlayWrapper = styled.View`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -40px;
+  margin-left: -40px;
+`;
+
+const PlayView = styled.View`
+  width: 80px;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 40px;
+  justify-content: center;
+  align-items: center;
 `;

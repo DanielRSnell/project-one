@@ -2,12 +2,20 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Animated, TouchableOpacity, Dimensions } from 'react-native';
+import { Animated, TouchableOpacity, Dimensions, AsyncStorage } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MenuItem from './MenuItem';
 import { connect } from 'react-redux';
 
 const screenHeight = Dimensions.get('window').height;
+
+const screenWidth = Dimensions.get("window").width;
+
+var cardWidth = screenWidth;
+
+if (screenWidth > 500) {
+	cardWidth = 500;
+}
 
 class Navigation extends React.Component {
 	state = {
@@ -37,16 +45,24 @@ class Navigation extends React.Component {
 		}
 	};
 
+	handleOption = index => {
+		if (index === 3) {
+			this.props.onCloseMenu()
+			this.props.onClearUser()
+			AsyncStorage.clear();
+		}
+	}
+
 	render() {
 		return (
 			<AnimatedContainerWrapper style={{ top: this.state.top }}>
 				<Cover>
 					<Image source={require('../assets/background2.jpg')} />
-					<Title>Daniel Snell</Title>
-					<Subtitle>Heroku Senior Engineer</Subtitle>
+					<Title>{this.props.user}</Title>
+					<Subtitle>Welcome back to Design+Code!</Subtitle>
 				</Cover>
 				<TouchableOpacity
-					onPress={this.props.onClose}
+					onPress={this.props.onCloseMenu}
 					style={{
 						position: 'absolute',
 						top: 120,
@@ -60,12 +76,15 @@ class Navigation extends React.Component {
 				</TouchableOpacity>
 				<Content>
 					{items.map((item, index) => (
+						<TouchableOpacity key={index} onPress={() => {
+							this.handleOption(index)
+						}}>
 						<MenuItem
-							key={index}
 							icon={item.icon}
 							title={item.title}
 							text={item.text}
-						/>
+							/>
+							</TouchableOpacity>
 					))}
 				</Content>
 			</AnimatedContainerWrapper>
@@ -98,11 +117,13 @@ const Subtitle = styled.Text`
 const Container = styled.View`
 	position: absolute;
 	background: white;
-	width: 100%;
+	width: ${cardWidth};
 	height: 100%;
 	z-index: 100;
 	border-radius: 10px;
+	align-self: center;
 	overflow: hidden;
+	
 `;
 
 const AnimatedContainerWrapper = Animated.createAnimatedComponent(Container);

@@ -21,11 +21,7 @@ export const Card = (props) => {
 						}>
 						<CardContainer style={{ elevation: 8 }}>
 							<Cover>
-								<Image
-									source={
-										'https://images.ctfassets.net/9ylc32dn5hpw/1unQVGeAWyChxUJNqGLK4y/37e8ea57ed3089b3e79dff7cdc76cc6c/background1.jpg'
-									}
-								/>
+								<CardImage source={item.image} />
 								<Title>{item.title}</Title>
 							</Cover>
 							<Content>
@@ -39,8 +35,8 @@ export const Card = (props) => {
 					</TouchableOpacity>
 				))
 			) : (
-				<AppLoading />
-			)}
+					<AppLoading />
+				)}
 		</ScrollView>
 	);
 };
@@ -92,7 +88,7 @@ const Cover = styled.View`
 	overflow: hidden;
 `;
 
-const Image = styled.Image`
+const CardImage = styled.Image`
 	width: 100%;
 	height: 100%;
 	position: absolute;
